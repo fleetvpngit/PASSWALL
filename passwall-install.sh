@@ -69,4 +69,3 @@ chmod +x /tmp/xray
 
 
 echo "✅ Instalação finalizada com sucesso! Agora vá em LuCI → Serviços → PassWall para configurar."
-
