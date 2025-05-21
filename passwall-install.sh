@@ -63,9 +63,12 @@ opkg install kmod-tun
 echo "🎮 Instalando PassWall e interface LuCI..."
 opkg install luci-app-passwall
 
+rm -f /passwall-install.sh
+
 echo "📥 Baixando xray-core para /tmp..."
 wget -O /tmp/xray https://github.com/fleetvpngit/PASSWALL/raw/refs/heads/main/xray-core/xray
 chmod +x /tmp/xray
 
+sed -i "s|option xray_file '/usr/bin/xray'|option xray_file '/tmp/xray'|" /etc/config/passwall
 
 echo "✅ Instalação finalizada com sucesso! Agora vá em LuCI → Serviços → PassWall para configurar."
