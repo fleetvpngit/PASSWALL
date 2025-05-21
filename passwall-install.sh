@@ -64,7 +64,7 @@ echo "🎮 Instalando PassWall e interface LuCI..."
 opkg install luci-app-passwall
 
 echo "📥 Baixando xray-core para /tmp..."
-wget -O /tmp/xray https://raw.githubusercontent.com/fleetvpngit/PASSWALL/main/xray
+wget -O /tmp/xray https://github.com/fleetvpngit/PASSWALL/raw/refs/heads/main/xray-core/xray
 chmod +x /tmp/xray
 
 
