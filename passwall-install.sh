@@ -1,19 +1,4 @@
 #!/bin/sh
-echo "🛠️ Este script foi feito para funcionar no OpenWrt 22.03.5 (arquitetura mipsel_24kc)."
-echo "- Instala o PassWall e pacotes no armazenamento interno do OpenWrt"
-echo "- Instala o Xray-core na memória temporária (/tmp)"
-echo
-
-read -p "❓ Você quer instalar o PassWall e Xray? (S/N): " resposta
-
-# Converte a resposta para minúscula
-resposta=$(echo "$resposta" | tr '[:upper:]' '[:lower:]')
-
-if [ "$resposta" != "s" ]; then
-    echo "❌ Instalação cancelada pelo usuário."
-    exit 0
-fi
-
 echo "🕓 Configurando fuso horário para America/Sao_Paulo..."
 uci set system.@system[0].timezone='America/Sao_Paulo'
 uci set system.@system[0].zonename='America/Sao_Paulo'
@@ -36,6 +21,22 @@ echo "⏰ Sincronizando hora com NTP..."
 /etc/init.d/sysntpd restart
 sleep 3
 date
+
+
+echo "🛠️ Este script foi feito para funcionar no OpenWrt 22.03.5 (arquitetura mipsel_24kc)."
+echo "- Instala o PassWall e pacotes no armazenamento interno do OpenWrt"
+echo "- Instala o Xray-core na memória temporária (/tmp)"
+echo
+
+read -p "❓ Você quer instalar o PassWall e Xray? (S/N): " resposta
+
+# Converte a resposta para minúscula
+resposta=$(echo "$resposta" | tr '[:upper:]' '[:lower:]')
+
+if [ "$resposta" != "s" ]; then
+    echo "❌ Instalação cancelada pelo usuário."
+    exit 0
+fi
 
 echo "📝 Desativando verificação de assinatura em opkg.conf..."
 sed -i 's/^option check_signature/#option check_signature/' /etc/opkg.conf
@@ -80,15 +81,10 @@ echo "📥 Baixando xray-core para /tmp..."
 wget -O /tmp/xray https://github.com/fleetvpngit/PASSWALL/raw/refs/heads/main/xray-core/xray
 chmod +x /tmp/xray
 
-sed -i "s|option xray_file '/usr/bin/xray'|option xray_file '/tmp/xray'|" /etc/config/passwall
-
 echo "🧹 ATUALIZANDO ARQUIVO DE CONFIGURACAO DO PASSWALL..."
 rm -f /etc/config/passwall
 wget -O /etc/config/passwall https://raw.githubusercontent.com/fleetvpngit/PASSWALL/refs/heads/main/config/passwall
 chmod +x /etc/config/passwall
-
-echo "🔁 Reiniciando o PassWall..."
-/etc/init.d/passwall restart
 
 echo "🔁 Ativando inicio automatico..."
 /etc/init.d/passwall enable

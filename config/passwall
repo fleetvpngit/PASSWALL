@@ -22,7 +22,7 @@ config global
 	option log_udp '1'
 	option udp_node 'M3b2zAqy'
 	option tcp_node 'M3b2zAqy'
-	option enabled '1'
+	option enabled '0'
 
 config global_haproxy
 	option balancing_enable '0'
