@@ -93,5 +93,7 @@ echo "🔁 Reiniciando o PassWall..."
 echo "🔁 Ativando inicio automatico..."
 /etc/init.d/passwall enable
 
+echo "📦 Instalando openssh-sftp-server..."
+opkg install openssh-sftp-server
 
 echo "✅ Instalação finalizada com sucesso! Agora vá em LuCI → Serviços → PassWall para configurar."
