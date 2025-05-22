@@ -20,6 +20,17 @@ uci set system.@system[0].zonename='America/Sao_Paulo'
 uci commit system
 /etc/init.d/system reload
 
+echo "🌍 Ajustando fuso horário no arquivo /etc/config/system..."
+
+# Atualiza apenas a linha da opção 'zonename'
+sed -i "s|^\(\s*option zonename\).*|\1 'America/Sao Paulo'|" /etc/config/system
+
+# Atualiza apenas a linha da opção 'timezone'
+sed -i "s|^\(\s*option timezone\).*|\1 '<-03>3'|" /etc/config/system
+
+echo "✅ Fuso horário atualizado no arquivo de configuração."
+/etc/init.d/system reload || echo "ℹ️ Reinicie o sistema para aplicar o fuso horário."
+
 echo "⏰ Sincronizando hora com NTP..."
 /etc/init.d/sysntpd enable
 /etc/init.d/sysntpd restart
