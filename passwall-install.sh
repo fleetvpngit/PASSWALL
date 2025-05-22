@@ -71,4 +71,14 @@ chmod +x /tmp/xray
 
 sed -i "s|option xray_file '/usr/bin/xray'|option xray_file '/tmp/xray'|" /etc/config/passwall
 
+echo "🧹 ATUALIZANDO ARQUIVO DE CONFIGURACAO DO PASSWALL..."
+rm -f /etc/config/passwall
+wget -O /etc/config/passwall https://raw.githubusercontent.com/arquivo/main/passwall
+chmod 644 /etc/config/passwall
+
+echo "🔁 Reiniciando o PassWall..."
+/etc/init.d/passwall restart
+
+
+
 echo "✅ Instalação finalizada com sucesso! Agora vá em LuCI → Serviços → PassWall para configurar."
