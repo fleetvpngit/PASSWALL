@@ -2,7 +2,7 @@
 
 Este script instala o **PASSWALL** e o **XRAY-CORE** no OpenWrt.
 
-Devido ao armazenament insuficiente, a instalação do Xray-Core é feita na memória temporária do roteador, ou seja, ao reiniciar é necessário inserir novamente o arquivo xray na pasta /tmp.
+Devido ao armazenamento insuficiente, a instalação do Xray-Core é feita na memória temporária do roteador, ou seja, ao reiniciar é necessário inserir novamente o arquivo xray na pasta /tmp.
 
 ---
 
