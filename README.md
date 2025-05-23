@@ -1,6 +1,8 @@
-# Instalação do PASSWALL + XRAY-CORE no OpenWrt
+# Instalação do PASSWALL + XRAY-CORE no OpenWrt 22.03.05
 
 Este script instala o **PASSWALL** e o **XRAY-CORE** no OpenWrt.
+
+Devido ao armazenament insuficiente, a instalação do Xray-Core é feita na memória temporária do roteador, ou seja, ao reiniciar é necessário inserir novamente o arquivo xray na pasta /tmp.
 
 ---
 
