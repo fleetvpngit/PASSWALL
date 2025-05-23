@@ -1,27 +1,4 @@
 #!/bin/sh
-echo "🕓 Configurando fuso horário para America/Sao_Paulo..."
-uci set system.@system[0].timezone='America/Sao_Paulo'
-uci set system.@system[0].zonename='America/Sao_Paulo'
-uci commit system
-/etc/init.d/system reload
-
-echo "🌍 Ajustando fuso horário no arquivo /etc/config/system..."
-
-# Atualiza apenas a linha da opção 'zonename'
-sed -i "s|^\(\s*option zonename\).*|\1 'America/Sao Paulo'|" /etc/config/system
-
-# Atualiza apenas a linha da opção 'timezone'
-sed -i "s|^\(\s*option timezone\).*|\1 '<-03>3'|" /etc/config/system
-
-echo "✅ Fuso horário atualizado no arquivo de configuração."
-/etc/init.d/system reload || echo "ℹ️ Reinicie o sistema para aplicar o fuso horário."
-
-echo "⏰ Sincronizando hora com NTP..."
-/etc/init.d/sysntpd enable
-/etc/init.d/sysntpd restart
-sleep 3
-date
-
 
 echo "🛠️ Este script foi feito para funcionar no OpenWrt 22.03.5 (arquitetura mipsel_24kc)."
 echo "- Instala o PassWall e pacotes no armazenamento interno do OpenWrt"
@@ -37,6 +14,28 @@ if [ "$resposta" != "s" ]; then
     echo "❌ Instalação cancelada pelo usuário."
     exit 0
 fi
+
+
+echo "🕓 Configurando fuso horário para America/Sao_Paulo..."
+uci set system.@system[0].timezone='America/Sao_Paulo'
+uci set system.@system[0].zonename='America/Sao_Paulo'
+uci commit system
+/etc/init.d/system reload
+
+echo "🌍 Ajustando fuso horário no arquivo /etc/config/system..."
+# Atualiza apenas a linha da opção 'zonename'
+sed -i "s|^\(\s*option zonename\).*|\1 'America/Sao Paulo'|" /etc/config/system
+# Atualiza apenas a linha da opção 'timezone'
+sed -i "s|^\(\s*option timezone\).*|\1 '<-03>3'|" /etc/config/system
+
+echo "✅ Fuso horário atualizado no arquivo de configuração."
+/etc/init.d/system reload || echo "ℹ️ Reinicie o sistema para aplicar o fuso horário."
+
+echo "⏰ Sincronizando hora com NTP..."
+/etc/init.d/sysntpd enable
+/etc/init.d/sysntpd restart
+sleep 3
+
 
 echo "📝 Desativando verificação de assinatura em opkg.conf..."
 sed -i 's/^option check_signature/#option check_signature/' /etc/opkg.conf
