@@ -9,7 +9,7 @@ BLUE='\033[0;34m'
 MAGENTA='\033[0;35m'
 NC='\033[0m' # Sem cor (reset)
 
-echo -e "${CYAN}🕓 Configurando fuso horário para America/Sao_Paulo...${NC}"
+echo -e "${CYAN}🕓 Configurando fuso horário para America/Sao Paulo...${NC}"
 uci set system.@system[0].timezone='America/Sao_Paulo'
 uci set system.@system[0].zonename='America/Sao_Paulo'
 uci commit system

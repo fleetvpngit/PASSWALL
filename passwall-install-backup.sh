@@ -1,5 +1,5 @@
 #!/bin/sh
-echo "🕓 Configurando fuso horário para America/Sao_Paulo..."
+echo "🕓 Configurando fuso horário para America/Sao Paulo..."
 uci set system.@system[0].timezone='America/Sao_Paulo'
 uci set system.@system[0].zonename='America/Sao_Paulo'
 uci commit system
