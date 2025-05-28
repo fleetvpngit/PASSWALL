@@ -15,7 +15,7 @@ uci set system.@system[0].zonename='America/Sao_Paulo'
 uci commit system
 
 echo -e "${BLUE}🌍 Ajustando fuso horário no arquivo /etc/config/system...${NC}"
-sed -i "s|^\(\s*option zonename\).*|\1 'America/Sao_Paulo'|" /etc/config/system
+sed -i "s|^\(\s*option zonename\).*|\1 'America/Sao Paulo'|" /etc/config/system
 sed -i "s|^\(\s*option timezone\).*|\1 '<-03>3'|" /etc/config/system
 
 echo -e "${GREEN}✅ Fuso horário atualizado no arquivo de configuração.${NC}"
