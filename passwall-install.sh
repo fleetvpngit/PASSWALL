@@ -1,51 +1,43 @@
 #!/bin/sh
-
-# Definição de cores ANSI
-RED='\033[0;31m'
-GREEN='\033[0;32m'
-YELLOW='\033[1;33m'
-CYAN='\033[0;36m'
-BLUE='\033[0;34m'
-MAGENTA='\033[0;35m'
-NC='\033[0m' # Sem cor (reset)
-
-echo -e "${CYAN}🕓 Configurando fuso horário para America/Sao Paulo...${NC}"
+echo "🕓 Configurando fuso horário para America/Sao Paulo..."
 uci set system.@system[0].timezone='America/Sao_Paulo'
 uci set system.@system[0].zonename='America/Sao_Paulo'
 uci commit system
 
-echo -e "${BLUE}🌍 Ajustando fuso horário no arquivo /etc/config/system...${NC}"
+
+# Atualiza timezone e zonename do OpenWRT
+echo "🌍 Ajustando fuso horário no arquivo /etc/config/system..."
 sed -i "s|^\(\s*option zonename\).*|\1 'America/Sao Paulo'|" /etc/config/system
 sed -i "s|^\(\s*option timezone\).*|\1 '<-03>3'|" /etc/config/system
 
-echo -e "${GREEN}✅ Fuso horário atualizado no arquivo de configuração.${NC}"
-/etc/init.d/system reload || echo -e "${YELLOW}ℹ️ Reinicie o sistema para aplicar o fuso horário.${NC}"
+echo "✅ Fuso horário atualizado no arquivo de configuração."
+/etc/init.d/system reload || echo "ℹ️ Reinicie o sistema para aplicar o fuso horário."
 
-echo -e "${CYAN}⏰ Sincronizando hora com NTP...${NC}"
+echo "⏰ Sincronizando hora com NTP..."
 /etc/init.d/sysntpd enable
 /etc/init.d/sysntpd restart
 sleep 3
 
-echo -e "${MAGENTA}🛠️ ESTE SCRITP FOI FEITO PARA OPENWRT 22.03.03 (mipsel_24kc)${NC}"
-echo -e "${MAGENTA}- INSTALA O PASSWALL E PACOTES"
-echo -e "${MAGENTA}- INSTALA O XRAY NA MEMÓRIA TEMPORÁRIA(/tmp)${NC}"
+
+echo "🛠️ Este script foi feito para funcionar no OpenWrt 22.03.5 (arquitetura mipsel_24kc)."
+echo "- Instala o PassWall e pacotes no armazenamento interno do OpenWrt"
+echo "- Instala o Xray-core na memória temporária (/tmp)"
 echo
 
-# Pergunta ao usuário
-while true; do
-  read -rp "$(echo -e "${YELLOW}❓ VOCÊ QUER INSTALAR O PASSWALL E XRAY? (S/N): ${NC}")" resposta
-  resposta=$(echo "$resposta" | tr '[:upper:]' '[:lower:]')
-  case "$resposta" in
-    s) break ;;
-    n) echo -e "${RED}❌ Instalação cancelada pelo usuário.${NC}" ; exit 0 ;;
-    *) echo -e "${RED}Por favor, responda com 'S' ou 'N'.${NC}" ;;
-  esac
-done
+read -p "❓ Você quer instalar o PassWall e Xray? (S/N): " resposta
 
-echo -e "${CYAN}📝 Desativando verificação de assinatura em opkg.conf...${NC}"
+# Converte a resposta para minúscula
+resposta=$(echo "$resposta" | tr '[:upper:]' '[:lower:]')
+
+if [ "$resposta" != "s" ]; then
+    echo "❌ Instalação cancelada pelo usuário."
+    exit 0
+fi
+
+echo "📝 Desativando verificação de assinatura em opkg.conf..."
 sed -i 's/^option check_signature/#option check_signature/' /etc/opkg.conf
 
-echo -e "${BLUE}➕ Adicionando repositórios do PassWall...${NC}"
+echo "➕ Adicionando repositórios do PassWall..."
 cat <<EOF >> /etc/opkg/customfeeds.conf
 
 # Repositórios PassWall (mipsel_24kc para OpenWrt 22.03)
@@ -54,47 +46,49 @@ src/gz passwall_packages http://master.dl.sourceforge.net/project/openwrt-passwa
 src/gz passwall2 http://master.dl.sourceforge.net/project/openwrt-passwall-build/releases/packages-22.03/mipsel_24kc/passwall2
 EOF
 
-echo -e "${CYAN}🔄 Atualizando lista de pacotes...${NC}"
+echo "🔄 Atualizando lista de pacotes..."
 opkg update
 
-echo -e "${YELLOW}🧹 Removendo dnsmasq padrão...${NC}"
+echo "🧹 Removendo dnsmasq padrão..."
 opkg remove dnsmasq
 opkg install dnsmasq-full
+sleep 5
 
-echo -e "${GREEN}⬇️ Instalando pacotes base...${NC}"
+echo "⬇️ Instalando pacotes base..."
 opkg install ipset ipt2socks iptables iptables-legacy
+sleep 5
 
-echo -e "${GREEN}🌐 Instalando NAT e DNS completo...${NC}"
+echo "🌐 Instalando NAT e DNS completo..."
 opkg install kmod-ipt-nat
-
-echo -e "${GREEN}🔗 Instalando módulos de rede para tunelamento...${NC}"
+sleep 15
+echo "🔗 Instalando módulos de rede para tunelamento..."
 opkg install kmod-tun
-
-echo -e "${GREEN}🔧 Instalando módulos extras para iptables (jogos/TPROXY)...${NC}"
+sleep 5
+echo "🔧 Instalando módulos extras para iptables (jogos/TPROXY)..."
 opkg install iptables-mod-conntrack-extra
 opkg install iptables-mod-iprange
 opkg install iptables-mod-socket
 opkg install iptables-mod-tproxy
+sleep 5
 
-echo -e "${MAGENTA}🎮 Instalando PassWall e interface LuCI...${NC}"
+echo "🎮 Instalando PassWall e interface LuCI..."
 opkg install luci-app-passwall
 
-echo -e "${MAGENTA}📦 Instalando openssh-sftp-server...${NC}"
+echo "📦 Instalando openssh-sftp-server..."
 opkg install openssh-sftp-server
 
-echo -e "${YELLOW}🧹 Atualizando arquivo de configuração do PassWall...${NC}"
+echo "🧹 ATUALIZANDO ARQUIVO DE CONFIGURACAO DO PASSWALL..."
 rm -f /etc/config/passwall
 wget -O /etc/config/passwall https://raw.githubusercontent.com/fleetvpngit/PASSWALL/refs/heads/main/config/passwall
 chmod +x /etc/config/passwall
 
-echo -e "${CYAN}🔁 Ativando início automático do PassWall...${NC}"
+echo "🔁 Ativando inicio automatico..."
 /etc/init.d/passwall enable
 
-echo -e "${CYAN}📥 Baixando xray-core para /tmp...${NC}"
+echo "📥 Baixando xray-core para /tmp..."
 wget -O /tmp/xray https://github.com/fleetvpngit/PASSWALL/raw/refs/heads/main/xray-core/xray
 chmod +x /tmp/xray
 
 rm -f /passwall-install.sh
 
-echo -e "${GREEN}✅ INSTALAÇÃO FINALIZADA COM SUCESSO!${NC}"
-echo -e "Agora vá em ${BLUE}LuCI → Serviços → PassWall${NC} para configurar."
+echo "✅ Instalação finalizada com sucesso! Agora vá em LuCI → Serviços → PassWall para configurar."
