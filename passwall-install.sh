@@ -56,14 +56,12 @@ sleep 5
 
 echo "⬇️ Instalando pacotes base..."
 opkg install ipset ipt2socks iptables iptables-legacy
-sleep 5
+
 
 echo "🌐 Instalando NAT e DNS completo..."
 opkg install kmod-ipt-nat
-sleep 15
 echo "🔗 Instalando módulos de rede para tunelamento..."
 opkg install kmod-tun
-sleep 5
 echo "🔧 Instalando módulos extras para iptables (jogos/TPROXY)..."
 opkg install iptables-mod-conntrack-extra
 opkg install iptables-mod-iprange
@@ -83,7 +81,7 @@ wget -O /etc/config/passwall https://raw.githubusercontent.com/fleetvpngit/PASSW
 chmod +x /etc/config/passwall
 
 echo "🔁 Ativando inicio automatico..."
-/etc/init.d/passwall enable
+service passwall enable
 
 echo "📥 Baixando xray-core para /tmp..."
 wget -O /tmp/xray https://github.com/fleetvpngit/PASSWALL/raw/refs/heads/main/xray-core/xray
