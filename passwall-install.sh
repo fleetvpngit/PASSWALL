@@ -65,6 +65,7 @@ opkg install kmod-tun
 echo "🔧 Instalando módulos extras para iptables (jogos/TPROXY)..."
 opkg install iptables-mod-conntrack-extra
 opkg install iptables-mod-iprange
+opkg install iptables-mod-extra
 opkg install iptables-mod-socket
 opkg install iptables-mod-tproxy
 sleep 5
